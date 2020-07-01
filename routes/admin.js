@@ -44,7 +44,7 @@ router.post('/categorias/nova', (req, res) => {
     if(req.body.nome.length < 2){
         erros.push({texto: "Nome para categoria muito curto para cadastro."})
     }
-
+    
     if(erros.length > 0){
         res.render('/admin/addcategorias', {erros: erros})
     }else{
@@ -175,7 +175,7 @@ router.get('/postagens/edit/:id', (req, res) => {
 })
 
 router.post('/postagens/edit', (req, res) =>{
-    Postagem.findOne({_id: req.body.id}).lean().then((postagem) =>{
+    Postagem.findOne({_id: req.body.id}).then((postagem) =>{
         console.log(postagem)
 
         postagem.titulo    = req.body.titulo
@@ -191,6 +191,16 @@ router.post('/postagens/edit', (req, res) =>{
             req.flash('error_msg', "Houve um erro ao editar postagem.")
             res.redirect('/admin')
         })   
+    })
+})
+
+router.get('/postagens/deletar/:id', (req, res) => {
+    Postagem.remove({_id: req.params.id}).then(() => {
+        req.flash('success_msg', "Postagem deletada com sucesso!")
+        res.redirect('/admin/postagens')
+    }).catch((err) => {
+        req.flash('error_msg', "Houve um erro ao deletar postagem!")
+        res.redirect('/admin/postagens')
     })
 })
 
