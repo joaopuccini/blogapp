@@ -124,7 +124,7 @@
 
 //OUTROS
 
-const PORT = 3030
+const PORT = process.env.PORT || 3030
 app.listen(PORT, () => {
     console.log('Servidor rodando com sucesso na porta: '+ PORT)
 })
