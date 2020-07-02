@@ -11,11 +11,10 @@
     require('./models/Postagem')
     const Postagem = mongoose.model("postagens")    
     require('./models/Categorias')
-    const Categoria = mongoose.model("categorias")    
-    require('./models/Usuario')
-    const usuarios = mongoose.model("usuarios")    
-    
-    
+    const Categoria = mongoose.model("categorias")      
+    const usuarios = require('./routes/usuario')   
+    const passport = require('passport')
+    require('./config/auth')(passport)
 
 // CONFIGURAÇÕES
     // SESSION
@@ -24,12 +23,17 @@
             resave: true,
             saveUninitialized: true        
         }))
+        app.use(passport.initialize())
+        app.use(passport.session())
+
         app.use(flash())
 
     // MIDDLEWARE - as variaveis globais
         app.use((req, res, next) => {
             res.locals.success_msg = req.flash("success_msg")
-            res.locals.error_msg   = req.flash("error_msg")            
+            res.locals.error_msg   = req.flash("error_msg")
+            res.locals.error       = req.flash("error")     
+            res.locals.user        = req.user || null       
             next()
         })
 
@@ -116,7 +120,7 @@
         })
         
         app.use('/admin/', admin) // pagina principal /admin... e rotas do admin
-        app.use('/usuario/', usuarios)
+        app.use('/usuarios', usuarios)
 
 //OUTROS
 
