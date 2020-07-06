@@ -24,12 +24,12 @@
     "dependencies": {
       "express":"*",
       "body-parser":"*",
-      "bcrypt": "*",
+      "bcrypt": "^3.0.6",
       "express-handlebars": "*",
       "mongoose": "*",
       "express-session":"*",
       "connect-flash": "*",
-      "passport":"*" 
+      "passport":"" 
   }
 
 
