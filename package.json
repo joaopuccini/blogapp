@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
   "repository": {
@@ -16,5 +16,16 @@
   "bugs": {
     "url": "https://github.com/joaopuccini/blogapp/issues"
   },
-  "homepage": "https://github.com/joaopuccini/blogapp#readme"
+  "homepage": "https://github.com/joaopuccini/blogapp#readme",
+  
+"engines": {
+  "node": "10.x"
+  },
+    "dependencies": {
+      "express":"*",
+      "body-parser":"*",
+      "bcrypt": "^0.8.5"
+  }
+
+
 }
