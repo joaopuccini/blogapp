@@ -24,7 +24,7 @@
     "dependencies": {
       "express":"*",
       "body-parser":"*",
-      "bcrypt": "^3.0.6",
+      "bcryptjs": "^3.0.6",
       "express-handlebars": "*",
       "mongoose": "*",
       "express-session":"*",
