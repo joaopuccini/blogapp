@@ -15,6 +15,7 @@
     const usuarios = require('./routes/usuario')   
     const passport = require('passport')
     require('./config/auth')(passport)
+    const db = require('./config/db')
 
 // CONFIGURAÇÕES
     // SESSION
@@ -47,7 +48,7 @@
         
     // MONGOOSE online ATLAS
         mongoose.Promise = global.Promise;
-        mongoose.connect('mongodb+srv://joaopuccini:0409@cluster0-jefvh.mongodb.net/blogapp?retryWrites=true&w=majority', {
+        mongoose.connect(db.mongoURI, {
             useNewUrlParser: true
             }).then(() => {
                 console.log("Conectado ao Mongo com sucesso!")
@@ -124,7 +125,7 @@
 
 //OUTROS
 
-const PORT = process.env.PORT 
+const PORT = process.env.PORT  
 app.listen(PORT, () => {
     console.log('Servidor rodando com sucesso na porta: '+ PORT)
 })
