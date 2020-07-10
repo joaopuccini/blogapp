@@ -17,49 +17,82 @@
     require('./config/auth')(passport)
     const db = require('./config/db')
 
-// CONFIGURAÇÕES
-    // SESSION
-        app.use(session({
-            secret: "joao",
-            resave: true,
-            saveUninitialized: true        
-        }))
-        app.use(passport.initialize())
-        app.use(passport.session())
+    class Server {
+        constructor(){
+            this.initSession();
+            this.initMongoDB();
+            this.initMiddleWare();
+            this.initBodyParser();
+            this.initHandleBars();
+            this.initPublic();
+            this.StartApp();
+        }
+        initSession() {
+            app.use(session({
+                secret: "joao",
+                resave: true,
+                saveUninitialized: true        
+            }))
+            app.use(passport.initialize())
+            app.use(passport.session())
 
-        app.use(flash())
+            app.use(flash())
+        }
 
-    // MIDDLEWARE - as variaveis globais
-        app.use((req, res, next) => {
-            res.locals.success_msg = req.flash("success_msg")
-            res.locals.error_msg   = req.flash("error_msg")
-            res.locals.error       = req.flash("error")     
-            res.locals.user        = req.user || null       
-            next()
-        })
-
-    // BODY PARSER
-        app.use(bodyParser.urlencoded({extended: true}))
-        app.use(bodyParser.json())
-    
-    // HANDLEBARS
-        app.engine('handlebars', handlebars({defaultLayout: 'main'}))
-        app.set('view engine', 'handlebars');
-        
-    // MONGOOSE online ATLAS
-        mongoose.Promise = global.Promise;
-        mongoose.connect(db.mongoURI, {
-            useNewUrlParser: true
-            }).then(() => {
-                console.log("Conectado ao Mongo com sucesso!")
-            }).catch((err) => {
-                console.log("Erro ao tentar se conectar ao mongo: " + err)
+        initMiddleWare(){
+            app.use((req, res, next) => {
+                res.locals.success_msg = req.flash("success_msg")
+                res.locals.error_msg   = req.flash("error_msg")
+                res.locals.error       = req.flash("error")     
+                res.locals.user        = req.user || null       
+                next()
             })
-        
-    // PUBLIC
-        app.use(express.static(path.join(__dirname, 'public')))
+        }
 
-    
+        initBodyParser(){
+            app.use(bodyParser.urlencoded({extended: true}))
+            app.use(bodyParser.json())
+        }
+
+        initHandleBars(){
+            app.engine('handlebars', handlebars({defaultLayout: 'main'}))
+            app.set('view engine', 'handlebars');
+        }
+
+        initMongoDB(){
+            mongoose.Promise = global.Promise;
+            mongoose.connect(db.mongoURI, {
+                useNewUrlParser: true
+                }).then(() => {
+                    console.log("Conectado ao Mongo com sucesso!")
+                }).catch((err) => {
+                    console.log("Erro ao tentar se conectar ao mongo: " + err)
+                })
+        }
+
+        initPublic(){
+            app.use(express.static(path.join(__dirname, 'public')))
+        }
+
+        StartApp(){
+            const PORT = process.env.PORT || 3030 // declaracao da constante
+            app.listen(PORT, () => {
+            console.log('Servidor rodando com sucesso na porta: '+ PORT)
+            })
+        }
+    }
+
+
+
+// CONFIGURAÇÕES
+    // SESSION      
+    // MIDDLEWARE - as variaveis globais
+    // BODY PARSER
+    // HANDLEBARS   
+    // MONGOOSE online ATLAS 
+    // PUBLIC
+    new Server();
+
 // ROTAS
         app.get('/', (req, res)=>{
             Postagem.find().lean().populate('categoria').sort({data: "desc"}).then((postagens) =>{
@@ -123,9 +156,4 @@
         app.use('/admin/', admin) // pagina principal /admin... e rotas do admin
         app.use('/usuarios', usuarios)
 
-//OUTROS
 
-const PORT = process.env.PORT  
-app.listen(PORT, () => {
-    console.log('Servidor rodando com sucesso na porta: '+ PORT)
-})

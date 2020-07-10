@@ -4,6 +4,7 @@ npm install --save
 	body-parser
 	mongoose
 	nodemon
+	yarn
 
 baixar bootstrap
 
